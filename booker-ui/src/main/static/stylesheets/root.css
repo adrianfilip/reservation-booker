@@ -1,0 +1,39 @@
+.topPanel {
+    width: 100%;
+    margin-left: 1%;
+}
+
+.bottomPanel {
+    width: 100%;
+    margin-left: 1%;
+    float: left;
+}
+
+.middleArea {
+    width: 100%;
+    border-top-color: grey;
+    border-bottom-color: grey;
+    border-left-color: transparent;
+    border-right: transparent;
+    border-style: solid;
+    float: left;
+    margin-top: 1%;
+}
+
+.sidePanel {
+    width: 13%;
+    float: left;
+}
+
+.contentArea {
+    width: 85%;
+    min-height: 90%;
+    float: left;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-left-color: grey;
+    border-right-color: transparent;
+    border-style: solid;
+    padding-top: 1%;
+    padding-left: 2%;
+}
