@@ -29,7 +29,7 @@ Then you can access the frontend at http://localhost:3000
 and login with user/pass: john/aaa or jane/aaa
 
 Once logged in you should see this screen:
-![](https://raw.github.com/adrianfilip/reservations-booker/master/Screenshots/MyReservationsPage.png)
+![](https://github.com/adrianfilip/reservation-boker/blob/master/Screenshots/MyReservationsPage.png?raw=true)
 
 ## 2. Other commands
 
