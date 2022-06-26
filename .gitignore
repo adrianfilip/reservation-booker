@@ -1,0 +1,13 @@
+*.class
+*.log
+*.bsp
+project/project
+.idea
+node_modules
+target
+*/package-lock.json
+*/yarn.lock
+.bloop
+.metals
+project/metals.sbt
+.vscode
