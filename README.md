@@ -1,4 +1,4 @@
-## Start the app
+## I. Start the app
 
 ### 1. Start backend
 
@@ -31,7 +31,7 @@ and login with user/pass: john/aaa or jane/aaa
 Once logged in you should see this screen:
 ![](https://github.com/adrianfilip/reservation-boker/blob/master/Screenshots/MyReservationsPage.png?raw=true)
 
-## 2. Other commands
+## II. Other commands
 
 ```shell
 sbtn "~bookerService/reStart"
@@ -49,7 +49,7 @@ curl -v -X POST http://localhost:8090/login -H 'Content-Type:application/json' -
 lsof -PiTCP -sTCP:LISTEN
 ```
 
-## 3. Other details
+## III. Other details
 
 This project is a Proof of Concept for Scala 3 + ZIO 2 + zio-http + Laminar so not all simplifications or refactors that
 can be done are done.
