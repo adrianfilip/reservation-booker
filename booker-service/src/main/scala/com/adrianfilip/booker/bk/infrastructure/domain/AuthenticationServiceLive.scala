@@ -19,10 +19,9 @@ private[infrastructure] case class AuthenticationServiceLive(
   encryptionService: EncryptionService
 ) extends AuthenticationService:
 
-  private val secret = "secret"
+  import AuthenticationServiceLive.toModel
 
-  def toModel(userE: UserE): User =
-    User(username = userE.username, role = userE.role, surname = userE.surname, lastName = userE.lastName)
+  private val secret = "secret"
 
   override def login(username: String, password: String): IO[InvalidPassword.type | UserNotFound, LoginResult] =
     for {
@@ -74,3 +73,6 @@ object AuthenticationServiceLive:
         encryptionService <- ZIO.service[EncryptionService]
       } yield AuthenticationServiceLive(tokenService, userRepository, encryptionService)
     }
+
+  private def toModel(userE: UserE): User =
+    User(username = userE.username, role = userE.role, surname = userE.surname, lastName = userE.lastName)
