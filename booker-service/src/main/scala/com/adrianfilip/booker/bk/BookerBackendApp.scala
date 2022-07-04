@@ -411,7 +411,7 @@ object BookerBackendApp extends ZIOAppDefault {
       AESEncryptService.layer,
       AuthenticationServiceLive.live,
       BuildingRepositoryMock.mock,
-      BuildingServiceLive.live,
+      BuildingServiceLive.layer,
       RoomRepositoryMock.mock,
       RoomServiceLive.layer,
       ReservationRepositoryMock.mock,
