@@ -100,11 +100,11 @@ object BookerBackendApp extends ZIOAppDefault {
   // Http app that is accessible only via a jwt token
   def buildingApp: Http[AuthenticationService with BuildingService, Throwable, Request, Response] =
     Http.collectZIO[Request] {
-      case req @ Method.GET -> !! / "buildings"                =>
+      case req @ Method.GET -> !! / "buildings"             =>
         for {
           res <- BuildingService.getAll
         } yield Response.json(GetAllBuildingsResponse(buildings = res).toJson)
-      case req @ Method.POST -> !! / "buildings" / "filter"    =>
+      case req @ Method.POST -> !! / "buildings" / "filter" =>
         for {
           request <- AuthenticationOperations.parseRequest[GetFilteredBuildingsRequest](req)
           res     <-
@@ -112,7 +112,7 @@ object BookerBackendApp extends ZIOAppDefault {
               BuildingService.GetFilteredBuildings(code = request.code, name = request.name, address = request.address)
             )
         } yield Response.json(GetFilteredBuildingsResponse(buildings = res).toJson)
-      case req @ Method.POST -> !! / "building"                =>
+      case req @ Method.POST -> !! / "building"             =>
         for {
           request  <- AuthenticationOperations.parseRequest[AddBuildingRequest](req)
           response <-
@@ -132,7 +132,7 @@ object BookerBackendApp extends ZIOAppDefault {
                 )
               }
         } yield response
-      case req @ Method.PUT -> !! / "building"                 =>
+      case req @ Method.PUT -> !! / "building"              =>
         for {
           request  <- AuthenticationOperations.parseRequest[UpdateBuildingRequest](req)
           response <-
@@ -408,7 +408,7 @@ object BookerBackendApp extends ZIOAppDefault {
       ZLayer.succeed(java.time.Clock.systemUTC),
       JWTTokenServiceLive.live,
       UserRepositoryMock.mock,
-      AESEncryptService.live,
+      AESEncryptService.layer,
       AuthenticationServiceLive.live,
       BuildingRepositoryMock.mock,
       BuildingServiceLive.live,
