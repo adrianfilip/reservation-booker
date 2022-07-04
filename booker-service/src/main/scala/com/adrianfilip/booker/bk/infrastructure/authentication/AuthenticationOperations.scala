@@ -26,8 +26,7 @@ object AuthenticationOperations:
     for {
       authenticationService <- ZIO.service[AuthenticationService]
       token                 <- ZIO
-                                 .fromOption(request.headers.toList.find(kv => kv._1 == "Authorization"))
-                                 .map(_._2.replace("Bearer ", ""))
+                                 .fromOption(request.bearerToken)
                                  .orElseFail(OuterError.MissingAuthorizationToken(""))
       user                  <- authenticationService.authenticate(token)
     } yield user
