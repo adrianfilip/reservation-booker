@@ -30,7 +30,4 @@ object UserRepositoryMock:
 
       override def findByUsername(username: String): UIO[Option[UserRepository.UserE]] =
         ZIO.succeed(users.find(_.username == username))
-
-      override def get(username: String): IO[AuthenticationDomainError.UserNotFound, UserRepository.UserE] =
-        ZIO.fromOption(users.find(_.username == username)).orElseFail(UserNotFound(username))
     )

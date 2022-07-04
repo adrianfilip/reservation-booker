@@ -76,12 +76,6 @@ object BuildingRepositoryMock:
           } yield ()
         }
 
-      override def get(id: String): IO[BuildingNotFound, Building] =
-        buildingsDb.get
-          .map(_.values.toList.find(_.uuid == id))
-          .flatMap(STM.fromOption(_).orElseFail(BuildingNotFound(id)))
-          .commit
-
       override def findLike(filters: LikeFilter): UIO[List[Building]] =
         buildingsDb.get
           .map(_.values.toList.filter { b =>
