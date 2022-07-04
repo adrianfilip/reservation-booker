@@ -9,7 +9,8 @@ trait BuildingRepository:
   def findAll: UIO[List[Building]]
   def findLike(likeFilter: LikeFilter): UIO[List[Building]]
   def findById(id: String): UIO[Option[Building]]
-  def get(id: String): IO[BuildingNotFound, Building]
+  def get(id: String): IO[BuildingNotFound, Building] =
+    findById(id).someOrFail(BuildingNotFound(id))
   def add(m: AddBuilding): IO[BuildingCodeAlreadyUsed, Unit]
   def update(m: Building): IO[BuildingNotFound | BuildingCodeAlreadyUsed, Unit]
   def delete(id: String): IO[BuildingNotFound, Unit]

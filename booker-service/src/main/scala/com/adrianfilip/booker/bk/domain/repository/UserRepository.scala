@@ -6,7 +6,8 @@ import zio.{IO, UIO, ZIO}
 
 trait UserRepository:
   def findByUsername(username: String): UIO[Option[UserE]]
-  def get(username: String): IO[UserNotFound, UserE]
+  def get(username: String): IO[UserNotFound, UserE] =
+    findByUsername(username).someOrFail(UserNotFound(username))
 
 object UserRepository:
 
