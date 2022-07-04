@@ -409,7 +409,7 @@ object BookerBackendApp extends ZIOAppDefault {
       JWTTokenServiceLive.live,
       UserRepositoryMock.mock,
       AESEncryptService.layer,
-      AuthenticationServiceLive.live,
+      AuthenticationServiceLive.layer,
       BuildingRepositoryMock.mock,
       BuildingServiceLive.layer,
       RoomRepositoryMock.mock,
