@@ -415,7 +415,7 @@ object BookerBackendApp extends ZIOAppDefault {
       RoomRepositoryMock.mock,
       RoomServiceLive.layer,
       ReservationRepositoryMock.mock,
-      ReservationServiceLive.live,
+      ReservationServiceLive.layer,
       MockDB.roomsMockDB,
       MockDB.buildingsMockDB,
       MockDB.reservationsMockDB
