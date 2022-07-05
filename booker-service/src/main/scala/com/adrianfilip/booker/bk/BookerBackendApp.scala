@@ -74,8 +74,6 @@ import zio.{Console, UIO, ZEnv, ZIO, ZIOAppDefault, ZLayer}
 import zio.json.*
 import zio.stm.TRef
 
-import java.time.Clock
-
 object BookerBackendApp extends ZIOAppDefault {
 
   val config: CorsConfig =
@@ -100,11 +98,11 @@ object BookerBackendApp extends ZIOAppDefault {
   // Http app that is accessible only via a jwt token
   def buildingApp: Http[AuthenticationService with BuildingService, Throwable, Request, Response] =
     Http.collectZIO[Request] {
-      case req @ Method.GET -> !! / "buildings"                =>
+      case req @ Method.GET -> !! / "buildings"             =>
         for {
           res <- BuildingService.getAll
         } yield Response.json(GetAllBuildingsResponse(buildings = res).toJson)
-      case req @ Method.POST -> !! / "buildings" / "filter"    =>
+      case req @ Method.POST -> !! / "buildings" / "filter" =>
         for {
           request <- AuthenticationOperations.parseRequest[GetFilteredBuildingsRequest](req)
           res     <-
@@ -112,7 +110,7 @@ object BookerBackendApp extends ZIOAppDefault {
               BuildingService.GetFilteredBuildings(code = request.code, name = request.name, address = request.address)
             )
         } yield Response.json(GetFilteredBuildingsResponse(buildings = res).toJson)
-      case req @ Method.POST -> !! / "building"                =>
+      case req @ Method.POST -> !! / "building"             =>
         for {
           request  <- AuthenticationOperations.parseRequest[AddBuildingRequest](req)
           response <-
@@ -132,7 +130,7 @@ object BookerBackendApp extends ZIOAppDefault {
                 )
               }
         } yield response
-      case req @ Method.PUT -> !! / "building"                 =>
+      case req @ Method.PUT -> !! / "building"              =>
         for {
           request  <- AuthenticationOperations.parseRequest[UpdateBuildingRequest](req)
           response <-
@@ -406,16 +404,17 @@ object BookerBackendApp extends ZIOAppDefault {
     : ZLayer[Any, Nothing, AuthenticationService with BuildingService with RoomService with ReservationService] =
     ZLayer.make[AuthenticationService with BuildingService with RoomService with ReservationService](
       ZLayer.succeed(java.time.Clock.systemUTC),
-      JWTTokenServiceLive.live,
+      zio.Clock.javaClock,
+      JWTTokenServiceLive.layer(),
       UserRepositoryMock.mock,
-      AESEncryptService.live,
-      AuthenticationServiceLive.live,
+      AESEncryptService.layer,
+      AuthenticationServiceLive.layer,
       BuildingRepositoryMock.mock,
-      BuildingServiceLive.live,
+      BuildingServiceLive.layer,
       RoomRepositoryMock.mock,
-      RoomServiceLive.live,
+      RoomServiceLive.layer,
       ReservationRepositoryMock.mock,
-      ReservationServiceLive.live,
+      ReservationServiceLive.layer,
       MockDB.roomsMockDB,
       MockDB.buildingsMockDB,
       MockDB.reservationsMockDB
