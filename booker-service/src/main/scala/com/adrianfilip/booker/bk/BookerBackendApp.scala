@@ -405,7 +405,7 @@ object BookerBackendApp extends ZIOAppDefault {
     ZLayer.make[AuthenticationService with BuildingService with RoomService with ReservationService](
       ZLayer.succeed(java.time.Clock.systemUTC),
       zio.Clock.javaClock,
-      JWTTokenServiceLive.layer,
+      JWTTokenServiceLive.layer(),
       UserRepositoryMock.mock,
       AESEncryptService.layer,
       AuthenticationServiceLive.layer,

@@ -7,9 +7,7 @@ import pdi.jwt.{Jwt, JwtAlgorithm, JwtClaim}
 import zio.json.*
 import zio.{Clock, IO, UIO, ZIO, ZLayer}
 
-private[infrastructure] case class JWTTokenServiceLive(clock: Clock) extends JWTTokenService:
-  // Secret Authentication key
-  val SECRET_KEY = "secretKey"
+private[infrastructure] case class JWTTokenServiceLive(clock: Clock, secretKey: String) extends JWTTokenService:
 
   override def encode(username: String, role: String): UIO[String] =
     for
@@ -20,14 +18,14 @@ private[infrastructure] case class JWTTokenServiceLive(clock: Clock) extends JWT
                     val json  = Claim(username = username, role = role).toJson
                     val claim =
                       JwtClaim(content = json, subject = Some(username)).issuedAt(issuedAt).expiresAt(expiresAt)
-                    Jwt.encode(claim, SECRET_KEY, JwtAlgorithm.HS512)
+                    Jwt.encode(claim, secretKey, JwtAlgorithm.HS512)
                   }.orDie
     yield token
 
   override def decode(token: String): IO[JWTTokenDomainError, JwtClaim] =
     ZIO
       .fromTry {
-        Jwt.decode(token, SECRET_KEY, Seq(JwtAlgorithm.HS512))
+        Jwt.decode(token, secretKey, Seq(JwtAlgorithm.HS512))
       }
       .mapError {
         case e if e.isInstanceOf[pdi.jwt.exceptions.JwtExpirationException] =>
@@ -36,13 +34,11 @@ private[infrastructure] case class JWTTokenServiceLive(clock: Clock) extends JWT
         case _                                                              => JWTTokenDomainError.MalformedToken
       }
 
-object JWTTokenServiceLive {
+object JWTTokenServiceLive:
 
-  val layer: ZLayer[Clock, Nothing, JWTTokenService] =
+  def layer(secretKey: String = "secretKey"): ZLayer[Clock, Nothing, JWTTokenService] =
     ZLayer {
       for {
         clock <- ZIO.service[Clock]
-      } yield JWTTokenServiceLive(clock)
+      } yield JWTTokenServiceLive(clock, secretKey)
     }
-
-}
