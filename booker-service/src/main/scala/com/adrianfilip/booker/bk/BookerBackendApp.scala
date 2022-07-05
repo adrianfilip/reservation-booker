@@ -74,8 +74,6 @@ import zio.{Console, UIO, ZEnv, ZIO, ZIOAppDefault, ZLayer}
 import zio.json.*
 import zio.stm.TRef
 
-import java.time.Clock
-
 object BookerBackendApp extends ZIOAppDefault {
 
   val config: CorsConfig =
@@ -406,7 +404,8 @@ object BookerBackendApp extends ZIOAppDefault {
     : ZLayer[Any, Nothing, AuthenticationService with BuildingService with RoomService with ReservationService] =
     ZLayer.make[AuthenticationService with BuildingService with RoomService with ReservationService](
       ZLayer.succeed(java.time.Clock.systemUTC),
-      JWTTokenServiceLive.live,
+      zio.Clock.javaClock,
+      JWTTokenServiceLive.layer,
       UserRepositoryMock.mock,
       AESEncryptService.layer,
       AuthenticationServiceLive.layer,
